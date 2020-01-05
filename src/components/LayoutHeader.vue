@@ -1,7 +1,7 @@
 <template>
   <div class="layout-header">
     <slot />
-    <a class="header-logout" @click="logout">注销 {{ userName }}</a>
+    <a class="logout" @click="logout">注销 {{ userName }}</a>
   </div>
 </template>
 
@@ -28,12 +28,12 @@ export default class LayoutHeaderComponent extends Vue {
     height: 60px;
     background: #fff;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
-  }
 
-  .header-logout {
-    float: right;
-    padding-right: 30px;
-    line-height: 60px;
-    font-size: 14px;
+    .logout {
+      float: right;
+      padding-right: 30px;
+      line-height: 60px;
+      font-size: 14px;
+    }
   }
 </style>

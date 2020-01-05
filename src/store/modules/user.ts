@@ -39,6 +39,7 @@ class User extends VuexModule implements IUserState {
   @Action
   public login (payload: LoginPayload) {
     const { username, token } = payload
+    console.log(username, token)
     setLocalStorage('IS_ADMIN', true)// 是否为管理员
     setLocalStorage('USER_NAME', username)
     setLocalStorage('JWT_TOKEN', token)

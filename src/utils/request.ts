@@ -1,8 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import store from '@/store'
+import { UserModule } from '@/store/modules/user'
 import router from '@/router'
 import { Message } from 'element-ui'
-import IAxiosResponse = Request.IAxiosResponse
+import { getLocalStorage } from '@/utils/storage'
+
+type IAxiosResponse<T> = Request.IAxiosResponse<T>
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -14,8 +16,9 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // 判断是否存在token，如果存在的话，则每个http header都加上token
-    if (localStorage.JWT_TOKEN) {
-      config.headers.Authorization = `token ${localStorage.JWT_TOKEN}`
+    const jwtToken = getLocalStorage('JWT_TOKEN')
+    if (jwtToken) {
+      config.headers.Authorization = `token ${jwtToken}`
     }
     return config
   },
@@ -33,7 +36,7 @@ service.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // 返回 401 清除token信息并跳转到登录页面
-          store.commit('LOG_OUT')
+          UserModule.logout()
           router.replace({
             path: '/login',
             query: { redirect: router.currentRoute.fullPath }
@@ -50,7 +53,9 @@ service.interceptors.response.use(
   })
 
 service.defaults.transformRequest = (request) => {
-  if (!request) throw new Error('params is null or undefined, please check it.')
+  if (request === undefined || request === null) {
+    return {}
+  }
   const params: any = new FormData()
   for (const data of Object.entries(request)) {
     const [key, value] = data
@@ -85,13 +90,13 @@ service.defaults.transformResponse = (response) => {
 
 export default {
   // T 表示API返回的 类型声明
-  get<T> (url: string, params: any, options: AxiosRequestConfig = {}): Promise<IAxiosResponse<T>> {
+  get<T> (url: string, params: any = {}, options: AxiosRequestConfig = {}): Promise<IAxiosResponse<T>> {
     return service.get(url, {
       ...options,
       params
     })
   },
-  post<T> (url: string, data: any, options: AxiosRequestConfig = {}): Promise<IAxiosResponse<T>> {
+  post<T> (url: string, data: any = {}, options: AxiosRequestConfig = {}): Promise<IAxiosResponse<T>> {
     return service.post(url, data, {
       ...options
     })

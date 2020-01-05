@@ -2,7 +2,15 @@
   <div class="login-wrapper">
     <div class="login-form">
       <h3 class="title">微型问卷系统后台管理</h3>
-      <el-form ref="form" :model="form" :rules="rules" label-position="top" class="form-area" @submit.native.prevent @keyup.enter="handleSubmit('form')">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-position="top"
+        class="form-area"
+        @submit.native.prevent
+        @keyup.enter="handleSubmit('form')"
+      >
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username" />
         </el-form-item>
@@ -10,7 +18,12 @@
           <el-input v-model="form.password" type="password" />
         </el-form-item>
         <el-form-item>
-          <el-button class="login-btn" type="primary" native-type="submit" @click="handleSubmit('form')">立即登录</el-button>
+          <el-button
+            class="login-btn"
+            type="primary"
+            native-type="submit"
+            @click="handleSubmit('form')"
+          >立即登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -64,7 +77,7 @@ export default class LoginComponent extends Vue {
           this.$message.success('登录成功!')
           const data: any = {
             username: this.form.username,
-            token: res.data || ''
+            token: res.data
           }
           UserModule.login(data)
           this.$router.push('/list')

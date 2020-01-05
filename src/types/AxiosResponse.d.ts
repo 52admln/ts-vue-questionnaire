@@ -1,4 +1,4 @@
-namespace Request {
+declare namespace Request {
   /**
    * 接口返回格式
    */
