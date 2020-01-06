@@ -12,7 +12,7 @@
       <div class="add-option">
         <el-button type="primary" @click="addOption(questionType.SINGLE_CHOICE)">单选题</el-button>
         <el-button type="primary" @click="addOption(questionType.MULTIPLE_CHOICE)">多选题</el-button>
-        <el-button type="primary" @click="addOption(questionType.TEXT_QUESTION)">文本提</el-button>
+        <el-button type="primary" @click="addOption(questionType.TEXT_QUESTION)">文本题</el-button>
       </div>
 
       <question-list
