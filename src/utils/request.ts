@@ -8,7 +8,10 @@ type IAxiosResponse<T> = Request.IAxiosResponse<T>
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  timeout: 5000
+  timeout: 5000,
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }
   // withCredentials: true // send cookies when cross-domain requests
 })
 
@@ -51,18 +54,6 @@ service.interceptors.response.use(
     }
     return Promise.reject(error) // 返回接口返回的错误信息
   })
-
-service.defaults.transformRequest = (request) => {
-  if (request === undefined || request === null) {
-    return {}
-  }
-  const params: any = new FormData()
-  for (const data of Object.entries(request)) {
-    const [key, value] = data
-    params.append(key, value)
-  }
-  return params
-}
 
 service.defaults.transformResponse = (response) => {
   try {

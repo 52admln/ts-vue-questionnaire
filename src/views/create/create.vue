@@ -45,10 +45,14 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import dayjs from 'dayjs'
-import { questionType, questionTypeText } from '@/config/enum/questionType'
-import QuestionList from '@/components/Question/QuestionList.vue'
 import { Form as ElForm } from 'element-ui'
+
+import { NaireAction, ApiCreateParam } from '@/api/naire'
+
+import { questionType, questionTypeText } from '@/config/enum/questionType'
 import { NaireStatus } from '@/config/enum/naireStatus'
+
+import QuestionList from '@/components/Question/QuestionList.vue'
 
 @Component({
   components: {
@@ -58,12 +62,12 @@ import { NaireStatus } from '@/config/enum/naireStatus'
 export default class NavBar extends Vue {
   private questionType = questionType
   private NaireStatus = NaireStatus
-  private form:Questionnaire.INaireItem = {
+  private form:Questionnaire.INaire = {
     title: '',
     intro: '',
     deadline: '',
-    status: '',
-    options: {},
+    status: 0,
+    options: '',
     topic: []
   }
 
@@ -164,17 +168,25 @@ export default class NavBar extends Vue {
 
   submitNaire (type: NaireStatus) {
     const form = this.$refs.form as ElForm
-    form.validate((valid) => {
+    form.validate(async (valid) => {
       if (!valid) return
       if (this.form.topic.length === 0) {
         return this.$message.warning('请至少添加一道题目。')
       }
-      const params = {
-        ...this.form,
-        status: Number(type),
-        deadline: new Date(this.form.deadline).getTime()
+      const params: ApiCreateParam = {
+        naire: {
+          ...this.form,
+          deadline: new Date(this.form.deadline).getTime()
+        },
+        status: 'create'
       }
-      console.log(params)
+      const res = await NaireAction.create(params)
+      if (res.success) {
+        this.$message.success('新建问卷成功！')
+        await this.$router.push('/list')
+      } else {
+        this.$message.error(res.msg)
+      }
     })
   }
 }

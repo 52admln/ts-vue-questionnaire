@@ -70,9 +70,9 @@ export default class LoginComponent extends Vue {
   handleSubmit (name: string) {
     (this.$refs[name] as ElForm).validate(async (valid) => {
       if (valid) {
-        const res = await AdminAction.login({
+        const res = await AdminAction.login(this.$qs.stringify({
           ...this.form
-        })
+        }))
         if (res.success) {
           this.$message.success('登录成功!')
           const data: any = {

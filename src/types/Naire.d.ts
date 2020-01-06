@@ -1,9 +1,9 @@
 declare namespace Questionnaire {
-  export interface INaireItem {
+  export interface INaire {
     title: string,
     intro: string,
-    deadline: string
-    status: string,
+    deadline: number | string
+    status: number,
     options: any,
     topic: IQuestionItem[]
   }
