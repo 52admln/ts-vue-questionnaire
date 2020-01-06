@@ -1,11 +1,11 @@
 <template>
   <!-- 创建问卷 -->
   <div class="create">
-    <el-form ref="form" label-position="right" label-width="100px">
-      <el-form-item label="问卷名称">
+    <el-form ref="form" :model="form" :rules="rules" label-position="right" label-width="100px">
+      <el-form-item label="问卷名称" prop="title">
         <el-input v-model="form.title" />
       </el-form-item>
-      <el-form-item label="问卷介绍">
+      <el-form-item label="问卷介绍" prop="intro">
         <el-input v-model="form.intro" type="textarea" rows="5" />
       </el-form-item>
 
@@ -15,13 +15,16 @@
         <el-button type="primary" @click="addOption(questionType.TEXT_QUESTION)">文本提</el-button>
       </div>
 
-      <!-- question list -->
-
-      <question-list :question-list="form.topic" />
+      <question-list
+        :question-list="form.topic"
+        @delQuestion="onDelQuestion"
+        @addOption="onAddOption"
+        @delOption="onDelOption"
+      />
 
       <div class="create-footer">
 
-        <el-form-item label="截止时间">
+        <el-form-item label="截止时间" prop="deadline">
           <el-date-picker
             v-model="form.deadline"
             type="datetime"
@@ -31,8 +34,8 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="default">保存问卷</el-button>
-          <el-button type="success">发布问卷</el-button>
+          <el-button type="default" @click="submitNaire(NaireStatus.UNPUBLISHED)">保存问卷</el-button>
+          <el-button type="success" @click="submitNaire(NaireStatus.PUBLISHED)">发布问卷</el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -44,6 +47,8 @@ import { Component, Vue } from 'vue-property-decorator'
 import dayjs from 'dayjs'
 import { questionType, questionTypeText } from '@/config/enum/questionType'
 import QuestionList from '@/components/Question/QuestionList.vue'
+import { Form as ElForm } from 'element-ui'
+import { NaireStatus } from '@/config/enum/naireStatus'
 
 @Component({
   components: {
@@ -52,6 +57,7 @@ import QuestionList from '@/components/Question/QuestionList.vue'
 })
 export default class NavBar extends Vue {
   private questionType = questionType
+  private NaireStatus = NaireStatus
   private form:Questionnaire.INaireItem = {
     title: '',
     intro: '',
@@ -61,14 +67,43 @@ export default class NavBar extends Vue {
     topic: []
   }
 
+  private rules = {
+    title: [
+      { required: true, message: '请输入问卷标题', trigger: 'blur' }
+    ],
+    deadline: [
+      { required: true, message: '请选择截止时间', trigger: 'blur' }
+    ]
+  }
+
   private datePickerOptions = {
     disabledDate (time: Date) {
       return time.getTime() < dayjs().add(-1, 'day').valueOf()
     }
   }
 
+  private onAddOption ({ index }: { index: number }) {
+    const tempData = {
+      content: '选项',
+      isAddition: false,
+      image: '', // 选项图片
+      desc: ''
+    }
+    this.form.topic[index].options!.push({ ...tempData })
+  }
+
+  private onDelOption ({ index, opIndex }: { index: number, opIndex: number }) {
+    if (this.form.topic[index].options!.length < 2) {
+      return this.$message.warning('已经是最后一个选项，无法删除。')
+    }
+    this.form.topic[index].options!.splice(opIndex, 1)
+  }
+
+  private onDelQuestion ({ index }: { index: number }) {
+    this.form.topic.splice(index, 1)
+  }
+
   addOption (type: questionTypeText) {
-    console.log(type)
     switch (type) {
       case questionType.SINGLE_CHOICE:
         const radioQues = {
@@ -125,6 +160,22 @@ export default class NavBar extends Vue {
         this.form.topic.push(textareaQues)
         break
     }
+  }
+
+  submitNaire (type: NaireStatus) {
+    const form = this.$refs.form as ElForm
+    form.validate((valid) => {
+      if (!valid) return
+      if (this.form.topic.length === 0) {
+        return this.$message.warning('请至少添加一道题目。')
+      }
+      const params = {
+        ...this.form,
+        status: Number(type),
+        deadline: new Date(this.form.deadline).getTime()
+      }
+      console.log(params)
+    })
   }
 }
 </script>

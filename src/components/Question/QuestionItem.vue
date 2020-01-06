@@ -28,7 +28,7 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
-  .option-btn {
-    padding-left: 10px;
+  .option-item {
+
   }
 </style>

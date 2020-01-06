@@ -80,7 +80,7 @@ export default class LoginComponent extends Vue {
             token: res.data
           }
           UserModule.login(data)
-          this.$router.push('/list')
+          await this.$router.push('/list')
         } else {
           this.$message.error(res.msg)
         }
