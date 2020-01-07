@@ -59,7 +59,7 @@ export default class LayoutComponent extends Vue {
   .layout-content {
     min-height: 500px;
     margin: 15px;
-    padding: 10px;
+    padding: 15px;
     border-radius: 4px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
     background: #fff;

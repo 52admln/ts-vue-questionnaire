@@ -12,7 +12,7 @@
         @keyup.enter="handleSubmit('form')"
       >
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username" />
+          <el-input v-model="form.username" autocomplete="on" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model="form.password" type="password" />
@@ -41,6 +41,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { Form as ElForm } from 'element-ui'
+
 import { UserModule } from '@/store/modules/user'
 import * as AdminAction from '@/api/admin'
 
@@ -70,9 +71,9 @@ export default class LoginComponent extends Vue {
   handleSubmit (name: string) {
     (this.$refs[name] as ElForm).validate(async (valid) => {
       if (valid) {
-        const res = await AdminAction.login(this.$qs.stringify({
+        const res = await AdminAction.login({
           ...this.form
-        }))
+        })
         if (res.success) {
           this.$message.success('登录成功!')
           const data: any = {
@@ -82,7 +83,7 @@ export default class LoginComponent extends Vue {
           UserModule.login(data)
           await this.$router.push('/list')
         } else {
-          this.$message.error(res.msg)
+          this.$message.error('登录失败，请检查账号密码是否正确。')
         }
       } else {
         this.$message.error('表单填写有误!')

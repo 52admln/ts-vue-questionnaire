@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="200px">
         <template slot-scope="{ row }">
-          <el-button size="mini" style="margin-right: 10px">统计</el-button>
+          <el-button size="mini" style="margin-right: 10px" @click="handleStatistics(row)">统计</el-button>
           <el-dropdown>
             <el-button type="primary" plain size="mini">
               操作<i class="el-icon-arrow-down el-icon--right" />
@@ -87,14 +87,28 @@ export default class NavBar extends Vue {
     this.fetchListData()
   }
 
+  /**
+   * 是否已截止
+   * @param deadline
+   */
   public isExpired (deadline: number) {
     return deadline < Date.now()
   }
 
   public createNaire () {
-    console.log('create naire')
+    this.$router.push({ name: 'create' })
+  }
+
+  /**
+   * 查看统计
+   * @param row
+   */
+  public handleStatistics (row: any) {
     this.$router.push({
-      name: 'create'
+      name: 'statisticsResult',
+      params: {
+        id: row.n_id
+      }
     })
   }
 

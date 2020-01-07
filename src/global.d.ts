@@ -1,4 +1,4 @@
-declare module 'query-string' {
+declare module 'querystring' {
   /**
    * Parse a query string into an object.
    * Leading ? or # are ignored, so you can pass location.search or location.hash directly.

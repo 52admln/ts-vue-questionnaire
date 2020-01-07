@@ -34,7 +34,7 @@ const routes: RouteConfig[] = [
         children: [
           {
             path: 'result',
-            name: 'result',
+            name: 'statisticsResult',
             component: () => import('@/views/statistics/result.vue'),
             meta: {
               navIndex: '/list',

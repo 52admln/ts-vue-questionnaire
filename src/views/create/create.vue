@@ -22,22 +22,19 @@
         @delOption="onDelOption"
       />
 
-      <div class="create-footer">
+      <el-form-item label="截止时间" prop="deadline">
+        <el-date-picker
+          v-model="form.deadline"
+          type="datetime"
+          :picker-options="datePickerOptions"
+          placeholder="选择日期时间"
+        />
+      </el-form-item>
 
-        <el-form-item label="截止时间" prop="deadline">
-          <el-date-picker
-            v-model="form.deadline"
-            type="datetime"
-            :picker-options="datePickerOptions"
-            placeholder="选择日期时间"
-          />
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="default" @click="submitNaire(NaireStatus.UNPUBLISHED)">保存问卷</el-button>
-          <el-button type="success" @click="submitNaire(NaireStatus.PUBLISHED)">发布问卷</el-button>
-        </el-form-item>
-      </div>
+      <el-form-item>
+        <el-button type="default" @click="submitNaire(NaireStatus.UNPUBLISHED)">保存问卷</el-button>
+        <el-button type="success" @click="submitNaire(NaireStatus.PUBLISHED)">发布问卷</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -194,8 +191,6 @@ export default class NavBar extends Vue {
 
 <style lang="scss" scoped>
 .create {
-  padding: 10px;
-
   .add-option {
     margin-bottom: 20px;
     text-align: center;

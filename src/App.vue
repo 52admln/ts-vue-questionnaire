@@ -21,6 +21,7 @@
 
   #app {
     width: 100%;
+    font-size: 14px;
     line-height: 1.5;
     color: #657180;
     -webkit-font-smoothing: antialiased;
@@ -38,5 +39,16 @@
 
   .highlight {
     color: #F56C6C;
+  }
+
+  /**
+  * 带外边框的表格
+  */
+  .el-table.border-table {
+    border: 1px solid #f5f7fa;
+    border-bottom: none;
+    .el-table__header th {
+      background: #f5f7fa;
+    }
   }
 </style>
