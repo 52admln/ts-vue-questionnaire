@@ -73,6 +73,14 @@ import HeaderInfo from '@/components/NaireComponent/HeaderInfo.vue'
 
 import { NaireAction } from '@/api/naire'
 import { questionType } from '@/config/enum/questionType'
+import { formatJson } from '@/utils'
+import { exportJson2Excel } from '@/utils/excel'
+
+//  结果统计题目
+interface StatisticQuestionItem extends Questionnaire.IQuestionItem {
+  charts: string[],
+  q_id: number
+}
 
 @Component({
   components: {
@@ -86,14 +94,46 @@ export default class StatisticsComponent extends Vue {
   private chartsOptions: any[] = []
   private questionType = questionType
 
+  downloadXls (index: number) {
+    const option: any = {}
+    option.fileName = this.questions[index].question
+    if (this.questions[index].type !== questionType.TEXT_QUESTION) {
+      option.datas = {
+        sheetData: this.questions[index].options,
+        sheetName: 'sheet',
+        sheetFilter: ['content', 'count', 'percent'],
+        sheetHeader: ['选项', '小计', '百分比'],
+        columnWidths: [40, 20, 20]
+      }
+    } else {
+      option.datas = {
+        sheetData: this.questions[index].answerList,
+        sheetName: 'sheet',
+        sheetFilter: ['userNumber', 'userName', 'content'],
+        sheetHeader: ['工号', '姓名', '提交内容'],
+        columnWidths: [20, 20, 40]
+      }
+    }
+
+    const data = formatJson(option.datas.sheetFilter, this.questions[index].options)
+    exportJson2Excel(
+      option.datas.sheetHeader,
+      data, option.fileName,
+      undefined,
+      undefined,
+      true,
+      'xlsx'
+    )
+  }
+
   getChartsData (questions: any[]) {
-    questions.forEach((item: any, quesIndex: number) => {
+    questions.forEach((item: StatisticQuestionItem, quesIndex: number) => {
       if (item.type === questionType.SINGLE_CHOICE || item.type === questionType.MULTIPLE_CHOICE) {
         const tempObj: any = {
           questionTitle: 'Q' + (quesIndex + 1),
           Axis: []
         }
-        item.options.forEach((option: any) => {
+        item.options!.forEach((option: Questionnaire.IOptionItem) => {
           // 字数过长则使用 ... 截掉多余文字
           const content = option.content.length > 16 ? `${option.content.substring(0, 14)}...` : option.content
           tempObj.Axis.push(content)
@@ -103,7 +143,7 @@ export default class StatisticsComponent extends Vue {
       }
     })
     this.$nextTick(() => {
-      questions.forEach((item: any) => {
+      questions.forEach((item: StatisticQuestionItem) => {
         if (item.type === questionType.SINGLE_CHOICE || item.type === questionType.MULTIPLE_CHOICE) {
           this.drawChart(item.q_id)
         }

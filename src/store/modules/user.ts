@@ -9,13 +9,15 @@ interface LoginPayload {
 
 export interface IUserState {
   isAdmin: boolean,
-  userName: string
+  userName: string,
+  token: string
 }
 
 @Module({ dynamic: true, store, name: 'user' })
 class User extends VuexModule implements IUserState {
   public isAdmin: boolean = getLocalStorage('IS_ADMIN') || false
   public userName: string = getLocalStorage('USER_NAME') || 'admin'
+  public token: string = getLocalStorage('JWT_TOKEN') || ''
 
   @Mutation
   private UPDATE_IS_ADMIN (isAdmin: boolean) {
@@ -25,6 +27,11 @@ class User extends VuexModule implements IUserState {
   @Mutation
   private UPDATE_USER_NAME (userName: string) {
     this.userName = userName
+  }
+
+  @Mutation
+  private UPDATE_TOKEN (token: string) {
+    this.token = token
   }
 
   // 用户退出登录
@@ -39,11 +46,12 @@ class User extends VuexModule implements IUserState {
   @Action
   public login (payload: LoginPayload) {
     const { username, token } = payload
-    console.log(username, token)
-    setLocalStorage('IS_ADMIN', true)// 是否为管理员
+    setLocalStorage('IS_ADMIN', true) // 是否为管理员
     setLocalStorage('USER_NAME', username)
     setLocalStorage('JWT_TOKEN', token)
     this.UPDATE_IS_ADMIN(true)
+    this.UPDATE_USER_NAME(username)
+    this.UPDATE_TOKEN(token)
   }
 }
 

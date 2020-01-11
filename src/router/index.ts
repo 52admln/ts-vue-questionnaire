@@ -42,6 +42,28 @@ const routes: RouteConfig[] = [
               title: '结果统计',
               hasSubNav: true
             }
+          },
+          {
+            path: 'source',
+            name: 'statisticsSource',
+            component: () => import('@/views/statistics/source.vue'),
+            meta: {
+              navIndex: '/list',
+              subNavIndex: 'source',
+              title: '样本数据',
+              hasSubNav: true
+            }
+          },
+          {
+            path: 'cross-analysis',
+            name: 'statisticsCrossAnalysis',
+            component: () => import('@/views/statistics/cross-analysis.vue'),
+            meta: {
+              navIndex: '/list',
+              subNavIndex: 'cross-analysis',
+              title: '交叉分析',
+              hasSubNav: true
+            }
           }
         ]
       }

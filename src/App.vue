@@ -51,4 +51,9 @@
       background: #f5f7fa;
     }
   }
+
+  .pagination {
+    margin-top: 10px;
+    text-align: center;
+  }
 </style>

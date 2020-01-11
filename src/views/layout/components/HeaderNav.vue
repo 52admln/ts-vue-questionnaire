@@ -34,10 +34,6 @@ export default class HeaderNav extends Vue {
   get defaultActive () {
     return this.$route.meta ? this.$route.meta.subNavIndex || '' : ''
   }
-
-  mounted () {
-    console.log(this.$route.params)
-  }
 }
 </script>
 

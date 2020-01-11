@@ -27,3 +27,11 @@ yarn lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+### 第三方插件
+
+- xlsx
+- file-saver
+- element-ui
+- echarts

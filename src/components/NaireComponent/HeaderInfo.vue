@@ -13,6 +13,8 @@
         创建日期： {{ naire.creattime | formatTime }} | 截止日期：{{ naire.deadline | formatTime }}
       </p>
     </div>
+
+    <slot />
   </div>
 </template>
 
