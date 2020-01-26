@@ -1,5 +1,5 @@
 <template>
-  <div class="naire-list">
+  <div v-loading.fullscreen.lock="loading" class="naire-list">
     <div class="naire-btn">
       <el-button type="primary" @click="createNaire">新建问卷</el-button>
     </div>
@@ -8,10 +8,11 @@
         type="selection"
         width="55"
       />
-      <el-table-column prop="n_title" label="问卷名称" align="center">
+      <el-table-column prop="n_title" label="问卷名称" align="left">
         <template slot-scope="{ row }">
           <router-link tag="a" :to="`./view/${row.n_id}`">
             {{ row.n_title }}
+            <el-tag v-if="isExpired(row.n_deadline)" class="ml-10" size="mini" type="danger">已截止</el-tag>
           </router-link>
         </template>
       </el-table-column>
@@ -23,9 +24,7 @@
       <el-table-column prop="n_deadline" label="截止时间" align="center">
         <template slot-scope="{ row }">
           <!-- 问卷超过截止日期 -->
-          <span :class="{ 'highlight': isExpired(row.n_deadline) }">
-            {{ row.n_deadline | formatTime }}
-          </span>
+          {{ row.n_deadline | formatTime }}
         </template>
       </el-table-column>
       <el-table-column prop="n_status" label="发布状态" align="center">
@@ -37,30 +36,34 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="200px">
         <template slot-scope="{ row }">
-          <el-button size="mini" style="margin-right: 10px" @click="handleStatistics(row)">统计</el-button>
+          <el-button type="primary" size="mini" style="margin-right: 10px" @click="handleStatistics(row)">统计分析</el-button>
           <el-dropdown @command="onOptionClick($event, row)">
-            <el-button type="primary" plain size="mini">
+            <el-button type="danger" size="mini">
               操作<i class="el-icon-arrow-down el-icon--right" />
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="preview">预览问卷</el-dropdown-item>
               <el-dropdown-item command="copyUrl">复制地址</el-dropdown-item>
-              <el-dropdown-item command="submitStatis" divided>查看回收情况</el-dropdown-item>
-              <el-dropdown-item command="edit">编辑问卷</el-dropdown-item>
+              <el-dropdown-item command="submitStatistic">查看回收情况</el-dropdown-item>
+              <el-dropdown-item command="edit" divided>编辑问卷</el-dropdown-item>
               <el-dropdown-item command="deadline">编辑截止时间</el-dropdown-item>
-              <el-dropdown-item command="publish">发布问卷</el-dropdown-item>
-              <el-dropdown-item command="unpublish">停止发布</el-dropdown-item>
+              <el-dropdown-item command="publish">{{ row.n_status === NaireStatus.PUBLISHED ? '停止发布' : '发布问卷' }}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
+
+    <change-time :visible.sync="changeTimeVisible" :model="editModel" />
+    <copy-url :visible.sync="copyUrlVisible" :model="editModel" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import dayjs from 'dayjs'
+import ChangeTime from './components/ChangeTime.vue'
+import CopyUrl from './components/CopyUrl.vue'
 import * as NaireAction from '@/api/naire'
 import { IApiNaireItem } from '@/api/types'
 
@@ -78,22 +81,41 @@ import { NaireStatus, NaireStatusText, NaireStatusColor } from '@/config/enum/na
     statusColorFilter (val: NaireStatus) {
       return NaireStatusColor[val]
     }
+  },
+  components: {
+    ChangeTime,
+    CopyUrl
   }
 })
 export default class NavBar extends Vue {
   private list: IApiNaireItem[] = []
+  private NaireStatus = NaireStatus
+  private loading: boolean = false
+  private changeTimeVisible: boolean = false
+  private copyUrlVisible: boolean = false
+  private editModel: any = {}
 
   mounted () {
     this.fetchListData()
   }
 
   onOptionClick (command: string, row: any) {
-    console.log(command, row)
     switch (command) {
       case 'preview':
-        console.log('预览问卷')
         this.$router.push({
           name: 'view',
+          params: {
+            id: row.n_id
+          }
+        })
+        break
+      case 'copyUrl':
+        this.editModel = row
+        this.copyUrlVisible = true
+        break
+      case 'submitStatistic':
+        this.$router.push({
+          name: 'submitStatistics',
           params: {
             id: row.n_id
           }
@@ -108,10 +130,11 @@ export default class NavBar extends Vue {
         })
         break
       case 'publish':
-        console.log('发布问卷')
+        this.changeStatus(row)
         break
-      case 'unpublish':
-        console.log('停止发布')
+      case 'deadline':
+        this.editModel = row
+        this.changeTimeVisible = true
         break
     }
   }
@@ -141,8 +164,28 @@ export default class NavBar extends Vue {
     })
   }
 
+  /**
+   * 修改发布状态
+   * @param row
+   */
+  async changeStatus (row: IApiNaireItem) {
+    this.loading = true
+    const res = await NaireAction.changeStatus({
+      n_id: row.n_id
+    })
+    this.loading = false
+    if (res.success) {
+      this.$message.success('更改状态成功')
+      this.fetchListData()
+    } else {
+      this.$message.error(res.msg)
+    }
+  }
+
   public async fetchListData () {
+    this.loading = true
     const res = await NaireAction.list()
+    this.loading = false
     if (!res.success) return
     this.list = res.data ? res.data : []
   }

@@ -70,6 +70,17 @@ const routes: RouteConfig[] = [
               title: '交叉分析',
               hasSubNav: true
             }
+          },
+          {
+            path: 'submit-statistics',
+            name: 'submitStatistics',
+            component: () => import('@/views/statistics/submit-statistics.vue'),
+            meta: {
+              navIndex: '/list',
+              subNavIndex: 'submit-statistics',
+              title: '回收情况',
+              hasSubNav: true
+            }
           }
         ]
       }

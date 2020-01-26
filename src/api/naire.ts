@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { IApiNaireSourceData, ApiNaireStatisticResult, IApiNaireItem } from './types'
+import { IApiNaireSourceData, IApiNaireStatisticResult, IApiNaireItem } from './types'
 
 /**
  * 问卷列表
@@ -30,7 +30,7 @@ export const create = (data: {
 export const statis = (data: {
   n_id: string
 }) => {
-  return request.post<ApiNaireStatisticResult>('/naire/statis', data, {
+  return request.post<IApiNaireStatisticResult>('/naire/statis', data, {
     headers: {
       'Content-Type': 'application/json; charset=UTF-8'
     }
@@ -110,4 +110,39 @@ export const submit = (data: {
       'Content-Type': 'application/json; charset=UTF-8'
     }
   })
+}
+
+/**
+ * 发布/停止发布
+ * @param data
+ */
+export const changeStatus = (data: {
+  n_id: string
+}) => {
+  return request.get<any>('/naire/changeStatus', data)
+}
+
+/**
+ * 回收情况
+ * @param data
+ */
+export const submitStatistic = (data: {
+  n_id: string,
+  current: number,
+  page_size: number,
+  status: number,
+  u_class:string
+}) => {
+  return request.get<any>('/naire/submitStatis', data)
+}
+
+/**
+ * 修改截止时间
+ * @param data
+ */
+export const changeTime = (data: {
+  n_id: string
+  n_deadline: number
+}) => {
+  return request.post<any>('/naire/changeTime', data)
 }

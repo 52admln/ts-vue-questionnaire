@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { IApiUserInfo, IApiClassItem } from '@/api/types'
 
 /**
  * 查找用户
@@ -9,7 +10,7 @@ export const getId = (data: {
   name: string,
   identity: string
 }) => {
-  return request.post<any>('/user/getId', data, {
+  return request.post<IApiUserInfo>('/user/getId', data, {
     headers: {
       'Content-Type': 'application/json; charset=UTF-8'
     }
@@ -32,9 +33,16 @@ export const addUser = (data: {
   u_identity: string,
   u_sex: string
 }) => {
-  return request.post('/user/addUser', data, {
+  return request.post<any>('/user/addUser', data, {
     headers: {
       'Content-Type': 'application/json; charset=UTF-8'
     }
   })
+}
+
+/**
+ * 获取部门信息
+ */
+export const getClass = () => {
+  return request.get<IApiClassItem[]>('/user/getClass')
 }

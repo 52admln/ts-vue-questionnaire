@@ -34,7 +34,19 @@ export interface IApiNaireItem {
 }
 
 // 结果通统计
-export interface ApiNaireStatisticResult {
+export interface IApiNaireStatisticResult {
   naire: Questionnaire.INaire,
   questions: IApiQuestionItem[]
+}
+
+// 用户信息
+export interface IApiUserInfo {
+  u_id: string,
+  name: string,
+  isFinished: boolean
+}
+
+// 部门列表
+export interface IApiClassItem {
+  u_class: string
 }

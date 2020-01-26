@@ -147,8 +147,8 @@ export default class extends Vue {
       })
       if (res.success) {
         this.isLogin = true
-        this.userId = res.data.u_id
-        if (res.data.isFinished) {
+        this.userId = res.data!.u_id
+        if (res.data!.isFinished) {
           this.$notify({
             title: '已完成问卷',
             message: '您已完成该问卷，请勿重复提交！',
@@ -157,7 +157,7 @@ export default class extends Vue {
           this.$router.push('/complete')
         } else {
           this.$notify({
-            title: '欢迎您 ' + res.data.name,
+            title: '欢迎您 ' + res.data!.name,
             message: '请继续完成问卷内容吧！',
             type: 'success'
           })
