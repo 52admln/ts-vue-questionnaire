@@ -5,12 +5,10 @@ export interface IToken {
   token: string
 }
 
-interface loginParams {
+export function login (data: {
   username: string,
   password: string
-}
-
-export function login (data: loginParams) {
+}) {
   const params = qs.stringify({
     ...data
   })

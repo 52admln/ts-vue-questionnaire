@@ -10,7 +10,7 @@
       />
       <el-table-column prop="n_title" label="问卷名称" align="center">
         <template slot-scope="{ row }">
-          <router-link tag="a" :to="`./preview/${row.n_id}`">
+          <router-link tag="a" :to="`./view/${row.n_id}`">
             {{ row.n_title }}
           </router-link>
         </template>
@@ -38,19 +38,18 @@
       <el-table-column label="操作" align="center" width="200px">
         <template slot-scope="{ row }">
           <el-button size="mini" style="margin-right: 10px" @click="handleStatistics(row)">统计</el-button>
-          <el-dropdown>
+          <el-dropdown @command="onOptionClick($event, row)">
             <el-button type="primary" plain size="mini">
               操作<i class="el-icon-arrow-down el-icon--right" />
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click="() => { console.log(row) }">预览问卷</el-dropdown-item>
-              <el-dropdown-item>复制地址</el-dropdown-item>
-              <el-dropdown-item>查看回收情况</el-dropdown-item>
-              <el-dropdown-item divided>设置问卷样式</el-dropdown-item>
-              <el-dropdown-item>编辑问卷</el-dropdown-item>
-              <el-dropdown-item>编辑截止时间</el-dropdown-item>
-              <el-dropdown-item>发布问卷</el-dropdown-item>
-              <el-dropdown-item>停止发布</el-dropdown-item>
+              <el-dropdown-item command="preview">预览问卷</el-dropdown-item>
+              <el-dropdown-item command="copyUrl">复制地址</el-dropdown-item>
+              <el-dropdown-item command="submitStatis" divided>查看回收情况</el-dropdown-item>
+              <el-dropdown-item command="edit">编辑问卷</el-dropdown-item>
+              <el-dropdown-item command="deadline">编辑截止时间</el-dropdown-item>
+              <el-dropdown-item command="publish">发布问卷</el-dropdown-item>
+              <el-dropdown-item command="unpublish">停止发布</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -62,7 +61,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import dayjs from 'dayjs'
-import { NaireAction, ApiNaireItem } from '@/api/naire'
+import * as NaireAction from '@/api/naire'
+import { IApiNaireItem } from '@/api/types'
 
 import { NaireStatus, NaireStatusText, NaireStatusColor } from '@/config/enum/naireStatus'
 
@@ -81,10 +81,31 @@ import { NaireStatus, NaireStatusText, NaireStatusColor } from '@/config/enum/na
   }
 })
 export default class NavBar extends Vue {
-  private list: ApiNaireItem[] = []
+  private list: IApiNaireItem[] = []
 
   mounted () {
     this.fetchListData()
+  }
+
+  onOptionClick (command: string, row: any) {
+    console.log(command, row)
+    switch (command) {
+      case 'preview':
+        console.log('预览问卷')
+        this.$router.push({
+          name: 'view',
+          params: {
+            id: row.n_id
+          }
+        })
+        break
+      case 'publish':
+        console.log('发布问卷')
+        break
+      case 'unpublish':
+        console.log('停止发布')
+        break
+    }
   }
 
   /**

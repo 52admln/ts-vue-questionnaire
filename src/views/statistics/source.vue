@@ -17,7 +17,7 @@
       </el-dropdown>
     </header-info>
 
-    <el-table :data="statisData.user_result" class="border-table">
+    <el-table :data="statisData.userResult" class="border-table">
       <el-table-column label="序号" type="index" width="100" align="center" />
       <el-table-column label="创建时间" min-width="160">
         <template slot-scope="{ row }">
@@ -48,17 +48,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import dayjs from 'dayjs'
 import { UserModule } from '@/store/modules/user'
 import HeaderInfo from '@/components/NaireComponent/HeaderInfo.vue'
-import { NaireAction } from '@/api/naire'
-import { questionType } from '@/config/enum/questionType'
-
-//  结果统计题目
-interface QuestionItem extends Questionnaire.IQuestionItem {
-  q_id: number,
-  q_content: string
-}
+import * as NaireAction from '@/api/naire'
+import { IApiQuestionItem } from '@/api/types'
 
 @Component({
   components: {
@@ -68,14 +61,13 @@ interface QuestionItem extends Questionnaire.IQuestionItem {
 export default class extends Vue {
   private loading: boolean = false
   private excelRowsPerTable: number = 500
-  private questionType = questionType
 
   private tableColumns: any[] = []
   private statisData: {
     naire: Questionnaire.INaire | null,
-    questions: QuestionItem[],
-    user_result: any[]
-  } = { naire: null, questions: [], user_result: [] }
+    question: IApiQuestionItem[],
+    userResult: any[]
+  } = { naire: null, question: [], userResult: [] }
   private pageParams: {
     current: number,
     page_size: number
@@ -94,7 +86,7 @@ export default class extends Vue {
     this.fetchData()
   }
 
-  getTableColumns (questions: QuestionItem[]) {
+  getTableColumns (questions: IApiQuestionItem[]) {
     const baseColumns = [
       {
         title: '姓名',
@@ -114,7 +106,7 @@ export default class extends Vue {
         width: 120
       }
     ]
-    questions.forEach((item: QuestionItem, index: number) => {
+    questions.forEach((item: IApiQuestionItem, index: number) => {
       baseColumns.push({
         title: item.q_content,
         key: 'q_' + item.q_id, // 表头与数据 采用 q_<q_id> 来关联
@@ -132,12 +124,16 @@ export default class extends Vue {
     })
     this.loading = false
     if (res.success) {
-      const { total, result } = res.data
-      this.statisData = result
+      const { total, result } = res.data!
+      this.statisData = {
+        userResult: result.user_result,
+        naire: result.naire,
+        question: result.question
+      }
       this.total = total
       this.tableColumns = this.getTableColumns(result.question) // 创建表头
     } else {
-      this.$message.error('获取结果统计失败。')
+      this.$message.error(res.msg)
       this.$router.back()
     }
   }

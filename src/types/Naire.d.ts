@@ -15,6 +15,7 @@ declare namespace Questionnaire {
   export type QuestionType = '单选' | '多选' | '文本'
 
   export interface IQuestionItem {
+    q_id?: string,
     description: string,
     isRequired: boolean,
     options?: IOptionItem[],
@@ -22,11 +23,12 @@ declare namespace Questionnaire {
     setting: IQuestionSetting,
     additional?: string,
     selectContent?: string,
-    selectMultipleContent?: number[]
-    type: string // TODO 使用 QuestionType 报错
-  }
+    selectMultipleContent?: number[],
+    type: string
+}
 
   export interface IOptionItem {
+    o_id?: string,
     content: string,
     desc: string,
     image: string,

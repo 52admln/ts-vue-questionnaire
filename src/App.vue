@@ -37,6 +37,26 @@
     transition: color .2s ease;
   }
 
+  .mt-10 {
+    margin-top: 10px;
+  }
+
+  .mt-20 {
+    margin-top: 20px;
+  }
+
+  .mb-10 {
+    margin-bottom: 10px;
+  }
+
+  .mb-20 {
+    margin-bottom: 20px;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
   .highlight {
     color: #F56C6C;
   }

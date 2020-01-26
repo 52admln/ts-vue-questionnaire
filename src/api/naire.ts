@@ -1,106 +1,113 @@
 import request from '@/utils/request'
+import { IApiNaireSourceData, ApiNaireStatisticResult, IApiNaireItem } from './types'
 
-export interface ApiCreateParam {
+/**
+ * 问卷列表
+ */
+export const list = () => {
+  return request.get<IApiNaireItem[]>('/naire', {})
+}
+
+/**
+ * 创建问卷
+ * @param data
+ */
+export const create = (data: {
   naire: Questionnaire.INaire,
-  status: 'create'
+  status: string
+}) => {
+  return request.post<any>('/naire/save', data, {
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8'
+    }
+  })
 }
 
-export interface ApiNaireIdParam {
+/**
+ * 问卷统计
+ * @param data
+ */
+export const statis = (data: {
   n_id: string
+}) => {
+  return request.post<ApiNaireStatisticResult>('/naire/statis', data, {
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8'
+    }
+  })
 }
 
-export interface ApiSourceDataParam extends ApiNaireIdParam {
+/**
+ * 样本数据
+ * @param data
+ */
+
+export const sourceData = (data: {
+  n_id: string
   current: number,
-  page_size: number
+    page_size: number
+}) => {
+  return request.get<IApiNaireSourceData>('/naire/sourcedata', data)
 }
 
-export interface ApiCrossAnlysisParam extends ApiNaireIdParam {
+/**
+ * 交叉分析
+ * @param data
+ */
+
+export const crossanalysis = (data: {
+  n_id: string
   x_id: number | string,
   y_id: number | string
+}) => {
+  return request.post<any>('/naire/crossanalysis', data, {
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8'
+    }
+  })
 }
 
-export interface ApiNaireSourceData {
-  naire: Questionnaire.INaire,
-  questions: Questionnaire.IQuestionItem
+/**
+ * 交叉分析
+ * @param data
+ */
+export const questions = (data: {
+  n_id: string
+}) => {
+  return request.post<any>('/naire/questions', data, {
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8'
+    }
+  })
 }
 
-export interface ApiNaireItem {
-  n_id: string,
-  a_id: string,
-  n_creattime: string,
-  n_deadline: string,
-  n_title: string,
-  n_status: string
-  n_intro: string
-  n_options: string
+/**
+ * 问卷详情
+ * @param data
+ */
+export const detail = (data: {
+  n_id: string
+  type: 'normal'
+}) => {
+  return request.post<any>('/naire/detail', data, {
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8'
+    }
+  })
 }
 
-export interface ApiNaireStatisticResult {
-  naire: Questionnaire.INaire,
-  questions: Questionnaire.IQuestionItem
-}
-
-export const NaireAction = {
-  /**
-   * 问卷列表
-   */
-  list () {
-    return request.get<ApiNaireItem[]>('/naire', {})
-  },
-
-  /**
-   * 创建问卷
-   * @param data
-   */
-  create (data: ApiCreateParam) {
-    return request.post<any>('/naire/save', data, {
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
-    })
-  },
-
-  /**
-   * 问卷统计
-   * @param data
-   */
-  statis (data: ApiNaireIdParam) {
-    return request.post<any>('/naire/statis', data, {
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
-    })
-  },
-
-  /**
-   * 样本数据
-   * @param data
-   */
-  sourceData (data: ApiSourceDataParam) {
-    return request.get<any>('/naire/sourcedata', data)
-  },
-
-  /**
-   * 交叉分析
-   * @param data
-   */
-  crossanalysis (data: ApiCrossAnlysisParam) {
-    return request.post<any>('/naire/crossanalysis', data, {
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
-    })
-  },
-
-  /**
-   * 交叉分析
-   * @param data
-   */
-  questions (data: ApiNaireIdParam) {
-    return request.post<any>('/naire/questions', data, {
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
-      }
-    })
-  }
+/**
+ * 提交问卷
+ * @param data
+ */
+export const submit = (data: {
+  nId: string,
+  result: any,
+  userId: string
+}) => {
+  return request.post<any>('/naire/submit', data, {
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8'
+    }
+  })
 }

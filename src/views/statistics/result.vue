@@ -71,7 +71,7 @@ import echarts from 'echarts'
 
 import HeaderInfo from '@/components/NaireComponent/HeaderInfo.vue'
 
-import { NaireAction } from '@/api/naire'
+import * as NaireAction from '@/api/naire'
 import { questionType } from '@/config/enum/questionType'
 import { formatJson } from '@/utils'
 import { exportJson2Excel } from '@/utils/excel'
@@ -79,7 +79,7 @@ import { exportJson2Excel } from '@/utils/excel'
 //  结果统计题目
 interface StatisticQuestionItem extends Questionnaire.IQuestionItem {
   charts: string[],
-  q_id: number
+  q_id: string
 }
 
 @Component({
@@ -91,7 +91,7 @@ export default class StatisticsComponent extends Vue {
   private loading: boolean = false
   private naire: Questionnaire.INaire | null = null
   private questions: any[] = []
-  private chartsOptions: any[] = []
+  private chartsOptions: any = {}
   private questionType = questionType
 
   downloadXls (index: number) {
@@ -145,7 +145,7 @@ export default class StatisticsComponent extends Vue {
     this.$nextTick(() => {
       questions.forEach((item: StatisticQuestionItem) => {
         if (item.type === questionType.SINGLE_CHOICE || item.type === questionType.MULTIPLE_CHOICE) {
-          this.drawChart(item.q_id)
+          this.drawChart(Number(item.q_id))
         }
       })
     })
@@ -219,14 +219,14 @@ export default class StatisticsComponent extends Vue {
     })
     this.loading = false
     if (res.success) {
-      this.naire = res.data.naire
-      this.questions = res.data.questions.map((item: any) => {
+      this.naire = res.data!.naire
+      this.questions = res.data!.questions.map((item) => {
         return {
           ...item,
           partOfAnswerList: item.type === questionType.TEXT_QUESTION ? item.answerList.slice(0, 100) : []
         }
       })
-      this.getChartsData(res.data.questions)
+      this.getChartsData(res.data!.questions)
     } else {
       this.$message.error('获取结果统计失败。')
       this.$router.back()

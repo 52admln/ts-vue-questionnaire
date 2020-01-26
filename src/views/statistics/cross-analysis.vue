@@ -54,7 +54,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import HeaderInfo from '@/components/NaireComponent/HeaderInfo.vue'
-import { NaireAction } from '@/api/naire'
+import * as NaireAction from '@/api/naire'
 import { getRound } from '@/utils'
 
 @Component({
@@ -68,8 +68,8 @@ export default class extends Vue {
     naire: Questionnaire.INaire | null,
     row: any[],
     column: any[],
-    cross_result: any[]
-  } = { naire: null, row: [], column: [], cross_result: [] }
+    crossResult: any[]
+  } = { naire: null, row: [], column: [], crossResult: [] }
   private naire: Questionnaire.INaire | null = null
   private questions: any[] = []
   private searchParams: {
@@ -84,13 +84,13 @@ export default class extends Vue {
     // 得出已有的结果对象
     const curResult: {
       [key: string]: {
-        count: number,
+        count: string,
         value: string,
         y_id: string,
         x_id: string
       }
     } = {}
-    this.statisData.cross_result.forEach((crossResult) => {
+    this.statisData.crossResult.forEach((crossResult) => {
       curResult[`${crossResult.y_id}_${crossResult.x_id}`] = {
         count: crossResult['count'],
         value: crossResult['x_value'],
@@ -119,9 +119,9 @@ export default class extends Vue {
         // 对应为： `${column.o_id}_${row.o_id}`
         // 通过循环全部结果，从而判断不存在的结果，赋值为 0
         const curItem = curResult[`${column.o_id}_${row.o_id}`] // 当前组合的对象
-        const curCount: number = curItem === undefined ? 0 : curItem.count // 当前组合对象的数量
+        const curCount: number = !curItem ? 0 : Number(curItem.count) // 当前组合对象的数量
         _obj[`y_${column.o_id}`] = curCount // 生成 y_id 对应的数据列
-        sum += curCount * 1 // 小计
+        sum += curCount // 小计
       })
       // 将一行数据添加
       _obj.count = sum
@@ -130,6 +130,7 @@ export default class extends Vue {
     // 对列数据进行百分比运算
     allResult.forEach(item => {
       for (const key in item) {
+        if (!item.hasOwnProperty(key)) continue
         if (key !== 'type' && key !== 'count') {
           item[key] = `${item[key]} (${item[key] === 0 ? 0 : getRound((item[key] * 100 / item.count), 2)}%)`
         }
@@ -157,11 +158,16 @@ export default class extends Vue {
     this.loading = false
     if (res.success) {
       const { column } = res.data
-      this.statisData = res.data
+      this.statisData = {
+        crossResult: res.data.cross_result,
+        naire: res.data.naire,
+        row: res.data.row,
+        column: res.data.column
+      }
       this.columns = this.getColumns(column) // 创建表头
       this.formateData() // 格式化表表格数据
     } else {
-      this.$message.error('获取数据错误，请重试，')
+      this.$message.error(res.data)
       this.$router.back()
     }
   }

@@ -44,7 +44,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import dayjs from 'dayjs'
 import { Form as ElForm } from 'element-ui'
 
-import { NaireAction, ApiCreateParam } from '@/api/naire'
+import * as NaireAction from '@/api/naire'
 
 import { questionType, questionTypeText } from '@/config/enum/questionType'
 import { NaireStatus } from '@/config/enum/naireStatus'
@@ -170,7 +170,7 @@ export default class NavBar extends Vue {
       if (this.form.topic.length === 0) {
         return this.$message.warning('请至少添加一道题目。')
       }
-      const params: ApiCreateParam = {
+      const params = {
         naire: {
           ...this.form,
           deadline: new Date(this.form.deadline).getTime()

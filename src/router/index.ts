@@ -68,6 +68,11 @@ const routes: RouteConfig[] = [
         ]
       }
     ]
+  },
+  {
+    path: '/view/:id',
+    name: 'view',
+    component: () => import('@/views/view/view.vue')
   }
 ]
 
