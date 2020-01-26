@@ -14,3 +14,10 @@ export function login (data: {
   })
   return request.post<IToken>('/admin/login', params)
 }
+
+export function changePwd (data: {
+  oldpwd: string
+  newpwd: string
+}) {
+  return request.post<any>('/admin/changepwd', data)
+}

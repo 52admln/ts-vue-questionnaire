@@ -83,6 +83,16 @@ const routes: RouteConfig[] = [
             }
           }
         ]
+      },
+      {
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/user/user.vue')
+      },
+      {
+        path: 'setting',
+        name: 'setting',
+        component: () => import('@/views/setting/setting.vue')
       }
     ]
   },

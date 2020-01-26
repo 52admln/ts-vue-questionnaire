@@ -78,7 +78,11 @@ export default class extends Vue {
   private total: number = 5
 
   exportExcelPart (index: number) {
-    window.open(`${process.env.VUE_APP_BASE_API}/naire/sourcedataExport?token=${UserModule.token}&n_id=${this.$route.params.id}&current=${index}&page_size=${this.excelRowsPerTable}`)
+    const url = process.env.VUE_APP_BASE_API
+    const token = UserModule.token
+    const nId = this.$route.params.id
+    const pageSize = this.excelRowsPerTable
+    window.open(`${url}/naire/sourcedataExport?token=${token}&n_id=${nId}&current=${index}&page_size=${pageSize}`)
   }
 
   onChangePage (val: number) {

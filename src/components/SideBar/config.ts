@@ -17,8 +17,18 @@ const navigations: NavMenu[] = [
   },
   {
     index: '/create',
-    icon: 'el-icon-document',
+    icon: 'el-icon-s-promotion',
     title: '创建问卷'
+  },
+  {
+    index: '/user',
+    icon: 'el-icon-user-solid',
+    title: '用户管理'
+  },
+  {
+    index: '/setting',
+    icon: 'el-icon-s-tools',
+    title: '管理员设置'
   }
 ]
 export default navigations
