@@ -99,6 +99,14 @@ export default class NavBar extends Vue {
           }
         })
         break
+      case 'edit':
+        this.$router.push({
+          name: 'edit',
+          params: {
+            id: row.n_id
+          }
+        })
+        break
       case 'publish':
         console.log('发布问卷')
         break

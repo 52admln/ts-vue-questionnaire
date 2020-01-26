@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { UserModule } from '@/store/modules/user'
 import router from '@/router'
 import { Message } from 'element-ui'
@@ -67,7 +67,7 @@ service.defaults.transformResponse = (response) => {
       return {
         success: false,
         data: res.data,
-        msg: res.message
+        msg: res.message || res.data || ''
       }
     }
   } catch (e) {

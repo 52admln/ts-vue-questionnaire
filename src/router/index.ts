@@ -24,7 +24,13 @@ const routes: RouteConfig[] = [
         path: 'create',
         name: 'create',
         component: () => import('@/views/create/create.vue'),
-        meta: { navIndex: '/create', title: '创建' }
+        meta: { navIndex: '/list', title: '创建' }
+      },
+      {
+        path: 'edit/:id',
+        name: 'edit',
+        component: () => import('@/views/edit/edit.vue'),
+        meta: { navIndex: '/list', title: '编辑' }
       },
       {
         path: 'statistics/:id',

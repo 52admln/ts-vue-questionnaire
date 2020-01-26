@@ -38,19 +38,19 @@
   }
 
   .mt-10 {
-    margin-top: 10px;
+    margin-top: 10px!important;
   }
 
   .mt-20 {
-    margin-top: 20px;
+    margin-top: 20px!important;
   }
 
   .mb-10 {
-    margin-bottom: 10px;
+    margin-bottom: 10px!important;
   }
 
   .mb-20 {
-    margin-bottom: 20px;
+    margin-bottom: 20px!important;
   }
 
   .text-center {

@@ -8,7 +8,7 @@
         class="option-item"
       >
         <span>{{ option.content }}</span>
-        <div style="white-space: pre-wrap" :class="['option-desc']" v-text="option.desc" />
+        <div :class="['option-desc']" v-text="option.desc" />
       </el-checkbox>
     </el-checkbox-group>
   </div>

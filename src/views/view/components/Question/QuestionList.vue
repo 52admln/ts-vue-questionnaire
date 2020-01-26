@@ -53,8 +53,10 @@ export default class extends Vue {
   }
 
   .question-item {
-    padding: 20px 10px;
+    width: 100%;
+    padding: 20px;
     margin-bottom: 20px;
+    box-sizing: border-box;
 
     &:hover {
       background: rgba(238, 238, 238, 0.47);

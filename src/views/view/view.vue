@@ -114,22 +114,27 @@ export default class extends Vue {
     return `在填写表单之前，请先填写用户信息。`
   }
 
+  // 是否为管理员
   get isAdmin () {
     return UserModule.isAdmin
   }
 
+  // 问卷未发布
   get isNotPublish () {
     return this.isAdmin ? false : this.naire.status === '0'
   }
 
+  // 问卷已截止
   get isExpired () {
     return this.isAdmin ? false : Number(this.naire.deadline) < new Date().getTime()
   }
 
+  // 返回管理平台
   goBack () {
     this.$router.push('/list')
   }
 
+  // 用户登录
   handleSubmit () {
     const ref = this.$refs['userInfo'] as ElForm
     ref.validate(async (valid) => {
@@ -163,6 +168,7 @@ export default class extends Vue {
     })
   }
 
+  // 问卷表单校验
   validateNaire () {
     let _flag = true
     let _addtion = false
@@ -225,6 +231,7 @@ export default class extends Vue {
     return true
   }
 
+  // 提交问卷
   async submitNaire () {
     if (!this.validateNaire()) {
       return
