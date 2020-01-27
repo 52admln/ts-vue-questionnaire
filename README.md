@@ -21,7 +21,7 @@
 │   ├── components             # global components
 │   ├── config                 # config of enum etc.
 │   ├── filters                # global filter
-│   ├── plugins                # third packages
+│   ├── plugins                # third party packages
 │   ├── router                 # router
 │   ├── store                  # store
 │   ├── types                  # namespace declaration
@@ -92,3 +92,8 @@ yarn run build
 查看 [vue-questionnaire-api](https://github.com/52admln/vue-questionnaire-api). 
 
 > 后端代码不堪入目，已计划重构。
+
+
+## LICENSE
+
+MIT
