@@ -87,12 +87,14 @@ const routes: RouteConfig[] = [
       {
         path: 'user',
         name: 'user',
-        component: () => import('@/views/user/user.vue')
+        component: () => import('@/views/user/user.vue'),
+        meta: { navIndex: '/user', title: '用户管理' }
       },
       {
         path: 'setting',
         name: 'setting',
-        component: () => import('@/views/setting/setting.vue')
+        component: () => import('@/views/setting/setting.vue'),
+        meta: { navIndex: '/setting', title: '管理员设置' }
       }
     ]
   },
