@@ -1,6 +1,6 @@
 declare namespace User {
   export interface IUser {
-    u_id: string,
+    u_id?: string,
     u_number: string,
     u_identity: string,
     u_name: string,
@@ -10,6 +10,6 @@ declare namespace User {
     u_class: string,
     u_email: string,
     u_tel: string,
-    u_status: string
+    u_status?: string
   }
 }

@@ -29,7 +29,7 @@
       <el-table-column prop="u_name" label="姓名" />
       <el-table-column label="性别">
         <template slot-scope="{ row }">
-          {{ row.u_sex === '1' ? '女' : '男' }}
+          {{ row.u_sex | sexFilter }}
         </template>
       </el-table-column>
       <el-table-column prop="u_class" label="部门" />

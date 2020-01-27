@@ -146,3 +146,13 @@ export const changeTime = (data: {
 }) => {
   return request.post<any>('/naire/changeTime', data)
 }
+
+/**
+ * 删除问卷
+ * @param data
+ */
+export const del = (data: {
+  n_id: string
+}) => {
+  return request.get<any>('/naire/del', data)
+}

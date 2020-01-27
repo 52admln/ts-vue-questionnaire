@@ -2,8 +2,9 @@
   <div v-loading.fullscreen.lock="loading" class="naire-list">
     <div class="naire-btn">
       <el-button type="primary" @click="createNaire">新建问卷</el-button>
+      <el-button type="danger" @click="batchDelete">批量删除</el-button>
     </div>
-    <el-table :data="list">
+    <el-table :data="list" @selection-change="onSelectionChange">
       <el-table-column
         type="selection"
         width="55"
@@ -48,6 +49,7 @@
               <el-dropdown-item command="edit" divided>编辑问卷</el-dropdown-item>
               <el-dropdown-item command="deadline">编辑截止时间</el-dropdown-item>
               <el-dropdown-item command="publish">{{ row.n_status === NaireStatus.PUBLISHED ? '停止发布' : '发布问卷' }}</el-dropdown-item>
+              <el-dropdown-item command="delete">删除问卷</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -94,9 +96,14 @@ export default class NavBar extends Vue {
   private changeTimeVisible: boolean = false
   private copyUrlVisible: boolean = false
   private editModel: any = {}
+  private selectContent: any[] = []
 
   mounted () {
     this.fetchListData()
+  }
+
+  onSelectionChange (val: any) {
+    this.selectContent = val
   }
 
   onOptionClick (command: string, row: any) {
@@ -136,6 +143,9 @@ export default class NavBar extends Vue {
         this.editModel = row
         this.changeTimeVisible = true
         break
+      case 'delete':
+        this.singleDelete(row)
+        break
     }
   }
 
@@ -151,11 +161,44 @@ export default class NavBar extends Vue {
     this.$router.push({ name: 'create' })
   }
 
+  private async deleteNaire (nIds: string) {
+    const res = await NaireAction.del({
+      n_id: nIds
+    })
+    if (res.success) {
+      this.$message.success('删除成功')
+      this.fetchListData()
+    } else {
+      this.$message.error('删除失败')
+    }
+  }
+
+  public singleDelete (row: IApiNaireItem) {
+    this.$confirm('您确认删除问卷吗？', '删除', {
+      type: 'warning'
+    })
+      .then(async () => {
+        this.deleteNaire(row.n_id)
+      })
+      .catch(() => {})
+  }
+
+  public batchDelete () {
+    this.$confirm('您确认删除这几条内容吗？', '批量删除', {
+      type: 'warning'
+    })
+      .then(async () => {
+        const rowIds = this.selectContent.map(({ n_id: id }) => id).join(',')
+        this.deleteNaire(rowIds)
+      })
+      .catch(() => {})
+  }
+
   /**
    * 查看统计
    * @param row
    */
-  public handleStatistics (row: any) {
+  public handleStatistics (row: IApiNaireItem) {
     this.$router.push({
       name: 'statisticsResult',
       params: {
