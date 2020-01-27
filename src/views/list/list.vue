@@ -1,7 +1,7 @@
 <template>
   <div v-loading.fullscreen.lock="loading" class="naire-list">
     <div class="naire-btn">
-      <el-button type="primary" @click="createNaire">新建问卷</el-button>
+      <el-button type="primary" @click="createNaire">创建问卷</el-button>
       <el-button type="danger" @click="batchDelete">批量删除</el-button>
     </div>
     <el-table :data="list" @selection-change="onSelectionChange">
