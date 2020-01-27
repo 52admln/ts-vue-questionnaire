@@ -87,7 +87,7 @@ interface IUserForm extends User.IUser{
 @Component
 export default class extends Vue {
   @Prop() visible!: boolean
-  @Prop() model!: any
+  @Prop() model!: IUserForm
   private form: IUserForm = {
     u_id: '',
     ...defaultUserData
