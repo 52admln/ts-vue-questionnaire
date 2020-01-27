@@ -1,4 +1,4 @@
-# 微型问卷系统 TypeScript 版
+# 微型问卷调查系统 TypeScript 版
 
 适用于学校及单位的问卷调查系统，对参与人员进行
 
@@ -70,7 +70,7 @@ yarn run build
 
 查看 [Configuration Reference](https://cli.vuejs.org/config/). 
 
-### 第三方插件
+## 第三方插件
 
 - xlsx
 - file-saver
@@ -78,3 +78,15 @@ yarn run build
 - echarts
 - qrcode
 - clipboard
+
+## API 及数据库
+
+#### .env.development
+
+本地环境请修改根目录下 `.env.development` 文件中的 `VUE_APP_BASE_API` 为本地调试的后端部署地址。
+
+#### .env.production
+
+生产环境请修改根目录下 `.env.production` 文件中的 `VUE_APP_BASE_API` 为线上的后端部署地址。
+
+查看 [vue-questionnaire-api](https://github.com/52admln/vue-questionnaire-api). 
