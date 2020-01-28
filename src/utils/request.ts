@@ -46,6 +46,7 @@ service.interceptors.response.use(
           Message.error('Token 失效，请重新登录。')
           break
         default:
+          Message.error('服务器错误，请重试。')
           break
       }
     } else {

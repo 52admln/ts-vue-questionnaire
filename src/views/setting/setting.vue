@@ -11,7 +11,7 @@
         <el-input v-model="form.passwdCheck" type="password" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleSubmit" :loading="loading">提交</el-button>
+        <el-button type="primary" :loading="loading" @click="handleSubmit">提交</el-button>
         <el-button type="ghost" style="margin-left: 8px" @click="handleReset">重置</el-button>
       </el-form-item>
     </el-form>
