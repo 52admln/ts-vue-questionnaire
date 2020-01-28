@@ -11,7 +11,7 @@
         <el-input v-model="form.passwdCheck" type="password" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleSubmit">提交</el-button>
+        <el-button type="primary" @click="handleSubmit" :loading="loading">提交</el-button>
         <el-button type="ghost" style="margin-left: 8px" @click="handleReset">重置</el-button>
       </el-form-item>
     </el-form>
@@ -70,6 +70,8 @@ export default class extends Vue {
     ]
   }
 
+  private loading: boolean = false
+
   handleSubmit () {
     const ref = this.$refs.form as ElForm
     ref.validate(async (valid) => {
@@ -78,7 +80,9 @@ export default class extends Vue {
         oldpwd: this.form.oldPasswd,
         newpwd: this.form.passwd
       }
+      this.loading = true
       const res = await AdminAction.changePwd(params)
+      this.loading = false
       if (res.success) {
         if (res.data > 0) {
           this.$message.success('修改成功')

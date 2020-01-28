@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="loading">
     <el-form inline>
       <el-form-item>
         <el-button type="primary" @click="addUser">新增用户</el-button>
@@ -97,6 +97,7 @@ interface ISearchOption {
   }
 })
 export default class extends Vue {
+  private loading: boolean = false
   private searchParams: {
     keyword: string,
     value: string
@@ -125,7 +126,7 @@ export default class extends Vue {
     page_size: 10
   }
   private total: number = 0
-  private list: User.IUser[] = []
+  public list: User.IUser[] = []
 
   get uploadUrl () {
     return `${process.env.VUE_APP_BASE_API}/user/upload`
@@ -216,10 +217,12 @@ export default class extends Vue {
   }
 
   public async fetchListData () {
+    this.loading = true
     const res = await UserAction.list({
       ...this.searchParams,
       ...this.pageParams
     })
+    this.loading = false
     if (res.success) {
       this.list = res.data.list
       this.total = res.data.total

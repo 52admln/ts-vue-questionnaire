@@ -102,6 +102,16 @@ const routes: RouteConfig[] = [
     path: '/view/:id',
     name: 'view',
     component: () => import('@/views/view/view.vue')
+  },
+  {
+    path: '/complete',
+    name: 'complete',
+    component: () => import('@/views/view/complete.vue')
+  },
+  {
+    path: '*',
+    name: '404',
+    component: () => import('@/views/404/404.vue')
   }
 ]
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="loading">
     <header-info :naire="naire" />
     <el-row class="cross-analysis-select" :gutter="20">
       <el-col :span="12">
