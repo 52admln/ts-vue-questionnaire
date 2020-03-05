@@ -32,9 +32,9 @@ const generateArray = (table: HTMLElement) => {
       if (rowspanStr) {
         rowspan = parseInt(rowspanStr)
       }
-      let cellValue = cell.innerText
+      const cellValue = cell.innerText
       // Skip ranges
-      ranges.forEach(function(range) {
+      ranges.forEach(function (range) {
         if (R >= range.s.r && R <= range.e.r && outRow.length >= range.s.c && outRow.length <= range.e.c) {
           for (let i = 0; i <= range.e.c - range.s.c; ++i) outRow.push(null)
         }
@@ -198,7 +198,7 @@ export const exportJson2Excel = (header: string[], data: any, filename: string =
       }
     }))
     // 以第一行为初始值
-    let result = colWidth[0]
+    const result = colWidth[0]
     for (let i = 1; i < colWidth.length; i++) {
       for (let j = 0; j < colWidth[i].length; j++) {
         if (result[j]['wch'] < colWidth[i][j]['wch']) {

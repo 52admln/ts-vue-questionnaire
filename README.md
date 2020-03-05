@@ -79,6 +79,10 @@ yarn run build
 - qrcode
 - clipboard
 
+## 批量导入
+
+用户批量导入模板文件见 `/Import_Template.xls`
+
 ## API 及数据库
 
 #### .env.development
